@@ -9,12 +9,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class JsonFileSerializerTest {
-    private JsonFileSerializer<User> jsonFileSerializer;
+    private JsonFileSerializer jsonFileSerializer;
     private DatabaseUtils databaseUtils;
 
     @BeforeEach
     void setUp() {
-        jsonFileSerializer = new JsonFileSerializer<>();
+        jsonFileSerializer = new JsonFileSerializer();
         databaseUtils = new DatabaseUtils();
     }
 
@@ -44,6 +44,7 @@ class JsonFileSerializerTest {
 
     @Test
     void shouldSaveTwoJsonStringToFile() {
+        // Arrange
         String userOne = """
                 {
                     "name": "James",
@@ -63,16 +64,16 @@ class JsonFileSerializerTest {
                 """;
         String documentOne = databaseUtils.createDocumentId();
         Path filepathOne = Paths.get("database", "example", documentOne);
-
         String documentTwo = databaseUtils.createDocumentId();
         Path filepathTwo = Paths.get("database", "example", documentTwo);
 
+        // Act
         jsonFileSerializer.save(userOne, filepathOne);
         jsonFileSerializer.save(userTwo, filepathTwo);
-
         String jsonOne = jsonFileSerializer.readJson(filepathOne);
         String jsonTwo = jsonFileSerializer.readJson(filepathTwo);
 
+        // Assert
         assertThat(jsonOne)
                 .isNotEmpty()
                 .contains("James")
