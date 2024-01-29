@@ -11,38 +11,30 @@ import org.junit.jupiter.api.Test;
 class DatabaseTest {
     private String databaseName = "example";
     private String rootDatabaseName = "database";
-    private String databaseNameFormatted = "example.txt";
-    private Database<User> databaseTxt;
+    private Database<User> database;
 
     @BeforeEach
     void setUp() {
-        databaseTxt = new Database(databaseName);
+        database = new Database<>(databaseName);
     }
 
     @Test
-    void shouldCreateDirectoryWithTheDatabaseAsName() {
+    void shouldCreateRootDirectoryWhenTheDatabaseClassNewInstance() {
         boolean directoryExists = Files.exists(Paths.get(rootDatabaseName));
         assertTrue(directoryExists);
     }
 
     @Test
-    void shouldCreateDirectoryWithTheDatabaseAsNameInDatabaseFolder() {
-        boolean directoryExists = Files.exists(Paths.get("database", databaseNameFormatted));
+    void shouldCreateDirectoryEqualsToCollectionWhenCreateNewDatabase() {
+        database.createNewDatabase("users");
+        boolean directoryExists = Files.exists(Paths.get(rootDatabaseName, "users"));
         assertTrue(directoryExists);
-    }
-
-    @Test
-    void shouldCreateNewFileWithNewDatabaseCreation() {
-        databaseTxt.createNewDatabase("users");
-        boolean fileExists = Files.exists(Paths.get("database", "users.txt"));
-
-        assertTrue(fileExists);
     }
 
     @Test
     void shouldReturnTrueWhenRecordIsCreated() {
         User user = new User("John", "Conner", "john@gmail.com", "john123");
-        boolean recordCreated = databaseTxt.createRecord(databaseName, user);
+        boolean recordCreated = database.createRecord(databaseName, user);
         assertTrue(recordCreated);
     }
 }

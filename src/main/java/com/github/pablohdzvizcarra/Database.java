@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Database<T> {
     private DatabaseUtils databaseUtils;
+    private static final String ROOT_FOLDER = "database";
 
     public Database(String databaseName) {
         databaseUtils = new DatabaseUtils();
@@ -16,16 +17,14 @@ public class Database<T> {
     }
 
     /**
-     * Initializes the database with the given name.
+     * Initializes a new collection with the collection parameter as name.
      *
-     * @param databaseName the name of the database
+     * @param collection the name of the collection
      */
-    private void init(String databaseName) {
-        String databaseNameFormatted = databaseUtils.getDatabaseNameFormatted(databaseName);
+    private void init(String collection) {
         try {
-            Files.createFile(Paths.get("database/" + databaseNameFormatted));
-        } catch (IOException e) {
-            e.printStackTrace();
+            Files.createDirectory(Paths.get(ROOT_FOLDER, collection));
+        } catch (IOException ignored) {
         }
 
     }
