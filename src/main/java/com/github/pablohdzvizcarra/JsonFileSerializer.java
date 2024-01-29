@@ -13,13 +13,17 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 public class JsonFileSerializer<T> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * Saves the given JSON string into the specified collection.
+     *
+     * @param json     the JSON string to be saved
+     * @param filepath the name of the collection to save the JSON.
+     * @throws IllegalStateException if there is an error during serialization or
+     *                               saving.
+     */
     void save(String json, Path filepath) {
         try {
-            T user = objectMapper.readValue(json, new TypeReference<T>() {
-            });
-            List<T> users = (List<T>) deserialize(filepath, User.class);
-            users.add(user);
-            objectMapper.writeValue(filepath.toFile(), users);
+            objectMapper.writeValue(filepath.toFile(), json);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             throw new IllegalStateException("Error trying to deserialize the jsonString into Java Object", e);
@@ -48,6 +52,15 @@ public class JsonFileSerializer<T> {
             return objectMapper.readValue(filepath.toFile(), listType);
         } catch (IOException e) {
             throw new IllegalStateException("Error trying to deserialize the file", e);
+        }
+    }
+
+    public String readJson(Path filepath) {
+        try {
+            return objectMapper.readValue(filepath.toFile(), String.class);
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "An error ocurred trying to deserialize the document: " + filepath.getFileName(), e);
         }
     }
 }

@@ -1,31 +1,21 @@
 package com.github.pablohdzvizcarra;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class JsonFileSerializerTest {
     private JsonFileSerializer<User> jsonFileSerializer;
-    private Path mockDatabasePath;
+    private DatabaseUtils databaseUtils;
 
     @BeforeEach
     void setUp() {
         jsonFileSerializer = new JsonFileSerializer<>();
-        prepareMockFile();
-    }
-
-    private void prepareMockFile() {
-        try {
-            mockDatabasePath = Files.createTempFile("mock", ".json");
-        } catch (IOException ignored) {
-        }
+        databaseUtils = new DatabaseUtils();
     }
 
     @Test
@@ -39,14 +29,17 @@ class JsonFileSerializerTest {
                 }
                 """;
 
-        jsonFileSerializer.save(userJson, mockDatabasePath);
-        List<User> users = jsonFileSerializer.deserialize(mockDatabasePath, User.class);
-        User user = users.get(0);
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = Paths.get("database", "example", documentId);
+        jsonFileSerializer.save(userJson, filepath);
+        String json = jsonFileSerializer.readJson(filepath);
 
-        assertEquals("James", user.name());
-        assertEquals("Gosling", user.lastName());
-        assertEquals("james@java.com", user.email());
-        assertEquals("java_master", user.nickname());
+        assertThat(json)
+                .isNotEmpty()
+                .contains("James")
+                .contains("Gosling")
+                .contains("james@java.com")
+                .contains("java_master");
     }
 
     @Test
@@ -68,12 +61,30 @@ class JsonFileSerializerTest {
                     "nickname": "javascript_master"
                 }
                 """;
+        String documentOne = databaseUtils.createDocumentId();
+        Path filepathOne = Paths.get("database", "example", documentOne);
 
-        jsonFileSerializer.save(userOne, mockDatabasePath);
-        jsonFileSerializer.save(userTwo, mockDatabasePath);
-        List<User> users = jsonFileSerializer.deserialize(mockDatabasePath, User.class);
+        String documentTwo = databaseUtils.createDocumentId();
+        Path filepathTwo = Paths.get("database", "example", documentTwo);
 
-        assertThat(users)
-                .hasSize(2);
+        jsonFileSerializer.save(userOne, filepathOne);
+        jsonFileSerializer.save(userTwo, filepathTwo);
+
+        String jsonOne = jsonFileSerializer.readJson(filepathOne);
+        String jsonTwo = jsonFileSerializer.readJson(filepathTwo);
+
+        assertThat(jsonOne)
+                .isNotEmpty()
+                .contains("James")
+                .contains("Gosling")
+                .contains("james@java.com")
+                .contains("java_master");
+
+        assertThat(jsonTwo)
+                .isNotEmpty()
+                .contains("Brendan")
+                .contains("Eich")
+                .contains("brendan@javascript.com")
+                .contains("javascript_master");
     }
 }
