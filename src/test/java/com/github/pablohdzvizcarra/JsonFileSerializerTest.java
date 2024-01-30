@@ -32,7 +32,7 @@ class JsonFileSerializerTest {
         String documentId = databaseUtils.createDocumentId();
         Path filepath = Paths.get("database", "example", documentId);
         jsonFileSerializer.save(userJson, filepath);
-        String json = jsonFileSerializer.readJson(filepath);
+        String json = jsonFileSerializer.deserializeFileIntoJson(filepath);
 
         assertThat(json)
                 .isNotEmpty()
@@ -70,8 +70,8 @@ class JsonFileSerializerTest {
         // Act
         jsonFileSerializer.save(userOne, filepathOne);
         jsonFileSerializer.save(userTwo, filepathTwo);
-        String jsonOne = jsonFileSerializer.readJson(filepathOne);
-        String jsonTwo = jsonFileSerializer.readJson(filepathTwo);
+        String jsonOne = jsonFileSerializer.deserializeFileIntoJson(filepathOne);
+        String jsonTwo = jsonFileSerializer.deserializeFileIntoJson(filepathTwo);
 
         // Assert
         assertThat(jsonOne)

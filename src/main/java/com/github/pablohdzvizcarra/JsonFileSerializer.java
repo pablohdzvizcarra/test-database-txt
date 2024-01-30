@@ -29,15 +29,6 @@ public class JsonFileSerializer {
 
     }
 
-    public String readJson(Path filepath) {
-        try {
-            return objectMapper.readValue(filepath.toFile(), String.class);
-        } catch (IOException e) {
-            throw new IllegalStateException(
-                    "An error ocurred trying to deserialize the document: " + filepath.getFileName(), e);
-        }
-    }
-
     /**
      * Deserializes the content of a file into a JSON string.
      *
