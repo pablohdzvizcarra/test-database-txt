@@ -47,4 +47,9 @@ public class JsonDataSaver {
         validateJsonFormat(data);
         jsonFileSerializer.save(data, filepath);
     }
+
+    public String readDocumentFromCollection(Path filepath) {
+        validateFilepath(filepath);
+        return jsonFileSerializer.deserializeFileIntoJson(filepath);
+    }
 }

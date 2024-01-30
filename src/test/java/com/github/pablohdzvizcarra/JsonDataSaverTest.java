@@ -1,5 +1,6 @@
 package com.github.pablohdzvizcarra;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Files;
@@ -70,5 +71,28 @@ class JsonDataSaverTest {
         assertThrows(IllegalStateException.class,
                 () -> jsonDataSaver.createDocumentInCollection(data, filepath),
                 "The record provided is not a valid JSON");
+    }
+
+    @Test
+    void shouldReadDocumentFromCollectionWhenDocumentExists() {
+        // Arrange
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentId);
+        String data = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling"
+                }
+                """;
+
+        // Act
+        jsonDataSaver.createDocumentInCollection(data, filepath);
+        String result = jsonDataSaver.readDocumentFromCollection(filepath);
+
+        // Assert
+        assertThat(result)
+                .isNotNull()
+                .contains("James")
+                .contains("Gosling");
     }
 }
