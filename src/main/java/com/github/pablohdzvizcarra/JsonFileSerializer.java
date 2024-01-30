@@ -37,4 +37,21 @@ public class JsonFileSerializer {
                     "An error ocurred trying to deserialize the document: " + filepath.getFileName(), e);
         }
     }
+
+    /**
+     * Deserializes the content of a file into a JSON string.
+     *
+     * @param filepath the path to the file to be deserialized
+     * @return the deserialized JSON string
+     * @throws IllegalStateException if an error occurs during deserialization
+     */
+    public String deserializeFileIntoJson(Path filepath) {
+        try {
+            return objectMapper.readValue(filepath.toFile(), String.class);
+        } catch (IOException e) {
+            throw new JsonFileSerializerException(
+                    "An error ocurred trying to deserialize the document: " + filepath.getFileName(), e);
+        }
+
+    }
 }

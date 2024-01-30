@@ -88,4 +88,33 @@ class JsonFileSerializerTest {
                 .contains("brendan@javascript.com")
                 .contains("javascript_master");
     }
+
+    @Test
+    void shouldDeserializeFileIntoJsonString() {
+        // Arrange
+        String userJson = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_master"
+                }
+                """;
+
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = Paths.get("database", "example", documentId);
+        jsonFileSerializer.save(userJson, filepath);
+
+        // Act
+        String json = jsonFileSerializer.deserializeFileIntoJson(filepath);
+
+        // Assert
+        assertThat(json)
+                .isNotEmpty()
+                .contains("James")
+                .contains("Gosling")
+                .contains("james@java.com")
+                .contains("java_master");
+
+    }
 }
