@@ -2,7 +2,10 @@ package com.github.pablohdzvizcarra;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class Database<T> {
     private DatabaseUtils databaseUtils;
     private static final String ROOT_FOLDER = "database";
+    private final Logger logger = Logger.getLogger(Database.class.getName());
+    private final JsonDataSaver jsonDataSaver = new JsonDataSaver();
 
     public Database(String databaseName) {
         databaseUtils = new DatabaseUtils();
@@ -38,13 +43,16 @@ public class Database<T> {
         init(databaseName);
     }
 
-    public boolean createRecord(String database, T record) {
+    public boolean createDocument(String collection, T object) {
+        logger.log(Level.INFO, "Creating a new document in collection: {0}", collection);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String data = objectMapper.writeValueAsString(record);
-            String databaseName = databaseUtils.getDatabaseNameFormatted(database);
+            String data = objectMapper.writeValueAsString(object);
+            String documentId = databaseUtils.createDocumentId();
+            Path filepath = Paths.get(ROOT_FOLDER, collection, documentId);
 
-            System.out.println(data);
+            jsonDataSaver.createDocumentInCollection(data, filepath);
+
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }

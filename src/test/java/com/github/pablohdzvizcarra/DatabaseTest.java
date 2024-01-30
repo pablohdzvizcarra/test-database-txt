@@ -34,7 +34,7 @@ class DatabaseTest {
     @Test
     void shouldReturnTrueWhenRecordIsCreated() {
         User user = new User("John", "Conner", "john@gmail.com", "john123");
-        boolean recordCreated = database.createRecord(databaseName, user);
+        boolean recordCreated = database.createDocument(databaseName, user);
         assertTrue(recordCreated);
     }
 }

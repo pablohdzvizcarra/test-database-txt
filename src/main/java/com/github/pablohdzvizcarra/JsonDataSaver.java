@@ -2,6 +2,7 @@ package com.github.pablohdzvizcarra;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonDataSaver {
     private ObjectMapper objectMapper = new ObjectMapper();
+    private JsonFileSerializer jsonFileSerializer;
+
+    public JsonDataSaver() {
+        jsonFileSerializer = new JsonFileSerializer();
+    }
 
     /**
      * Saves the given record inside a file with the specified filename.
@@ -25,7 +31,7 @@ public class JsonDataSaver {
         validateJsonFormat(jsonString);
         validateFilepath(filepath);
         List<User> users = new ArrayList<>();
-        User user = deserializeJsonToObject(jsonString); 
+        User user = deserializeJsonToObject(jsonString);
         users.add(user);
 
         try {
@@ -34,7 +40,7 @@ public class JsonDataSaver {
         } catch (Exception e) {
             return false;
         }
-        
+
         return true;
     }
 
@@ -61,5 +67,9 @@ public class JsonDataSaver {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("The record provided is not a valid JSON", e);
         }
+    }
+
+    public void createDocumentInCollection(String data, Path filepath) {
+        jsonFileSerializer.save(data, filepath);
     }
 }
