@@ -6,6 +6,9 @@ import java.nio.file.Path;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * This Low-level class provides functionality to serialize and deserialize JSON strings into files.
+ */
 public class JsonFileSerializer {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -14,8 +17,7 @@ public class JsonFileSerializer {
      *
      * @param json     the JSON string to be saved
      * @param filepath the name of the collection to save the JSON.
-     * @throws IllegalStateException if there is an error during serialization or
-     *                               saving.
+     * @throws IllegalStateException if there is an error during serialization or saving.
      */
     void save(String json, Path filepath) {
         try {
@@ -26,7 +28,6 @@ public class JsonFileSerializer {
         } catch (IOException e) {
             throw new IllegalStateException("Error trying to serialize the object into a file", e);
         }
-
     }
 
     /**
@@ -43,6 +44,5 @@ public class JsonFileSerializer {
             throw new JsonFileSerializerException(
                     "An error ocurred trying to deserialize the document: " + filepath.getFileName(), e);
         }
-
     }
 }

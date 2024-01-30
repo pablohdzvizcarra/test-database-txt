@@ -49,7 +49,7 @@ public class Database<T> {
         try {
             String data = objectMapper.writeValueAsString(object);
             String documentId = databaseUtils.createDocumentId();
-            Path filepath = Paths.get(ROOT_FOLDER, collection, documentId);
+            Path filepath = createFilepath(collection, documentId);
 
             jsonDataSaver.createDocumentInCollection(data, filepath);
 
@@ -57,5 +57,9 @@ public class Database<T> {
             throw new IllegalStateException(e);
         }
         return true;
+    }
+
+    private Path createFilepath(String collection, String documentId) {
+        return Paths.get(ROOT_FOLDER, collection, documentId);
     }
 }
