@@ -40,4 +40,20 @@ class DatabaseUtilsTest {
                 .hasSize(36)
                 .doesNotContain("-");
     }
+
+    @Test
+    void shouldAddIdValueToJson() {
+        // Arrange
+        String data = "{\"name\":\"James\"}";
+        String id = databaseUtils.createDocumentId();
+
+        // Act
+        String result = databaseUtils.addIdValueToJson(data, id);
+
+        // Assert
+        assertThat(result)
+                .isNotEmpty()
+                .contains(id)
+                .contains("_id");
+    }
 }
