@@ -95,4 +95,26 @@ class JsonDataSaverTest {
                 .contains("James")
                 .contains("Gosling");
     }
+
+    @Test
+    void shouldAddIDToDocumentWhenDocumentIsCreated() {
+        // Arrange
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentId);
+        String data = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling"
+                }
+                """;
+
+        // Act
+        jsonDataSaver.createDocumentInCollection(data, filepath, documentId);
+        String result = jsonDataSaver.readDocumentFromCollection(filepath);
+
+        // Assert
+        assertThat(result)
+                .isNotNull()
+                .contains(documentId);
+    }
 }
