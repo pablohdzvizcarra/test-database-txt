@@ -51,7 +51,7 @@ public class Database<T> {
             String documentId = databaseUtils.createDocumentId();
             Path filepath = createFilepath(collection, documentId);
 
-            jsonDataSaver.createDocumentInCollection(data, filepath);
+            jsonDataSaver.createDocumentInCollection(data, filepath, documentId);
 
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
