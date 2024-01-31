@@ -2,16 +2,36 @@ package com.github.pablohdzvizcarra;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class JsonFileSerializerTest {
     private JsonFileSerializer jsonFileSerializer;
     private DatabaseUtils databaseUtils;
+    private static final String ROOT_FOLDER = "database";
+    private static final String COLLECTION_TEST = "test_database";
 
+    @BeforeAll
+    static void setUpAll() {
+        if (Files.notExists(Paths.get(ROOT_FOLDER))) {
+            try {
+                Files.createDirectory(Paths.get(ROOT_FOLDER));
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (Files.notExists(Paths.get(ROOT_FOLDER, COLLECTION_TEST))) {
+            try {
+                Files.createDirectory(Paths.get(ROOT_FOLDER, COLLECTION_TEST));
+            } catch (Exception ignored) {
+            }
+        }
+    }
     @BeforeEach
     void setUp() {
         jsonFileSerializer = new JsonFileSerializer();
@@ -30,7 +50,7 @@ class JsonFileSerializerTest {
                 """;
 
         String documentId = databaseUtils.createDocumentId();
-        Path filepath = Paths.get("database", "example", documentId);
+        Path filepath = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentId);
         jsonFileSerializer.save(userJson, filepath);
         String json = jsonFileSerializer.deserializeFileIntoJson(filepath);
 
@@ -63,9 +83,9 @@ class JsonFileSerializerTest {
                 }
                 """;
         String documentOne = databaseUtils.createDocumentId();
-        Path filepathOne = Paths.get("database", "example", documentOne);
+        Path filepathOne = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentOne);
         String documentTwo = databaseUtils.createDocumentId();
-        Path filepathTwo = Paths.get("database", "example", documentTwo);
+        Path filepathTwo = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentTwo);
 
         // Act
         jsonFileSerializer.save(userOne, filepathOne);
@@ -102,7 +122,7 @@ class JsonFileSerializerTest {
                 """;
 
         String documentId = databaseUtils.createDocumentId();
-        Path filepath = Paths.get("database", "example", documentId);
+        Path filepath = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentId);
         jsonFileSerializer.save(userJson, filepath);
 
         // Act

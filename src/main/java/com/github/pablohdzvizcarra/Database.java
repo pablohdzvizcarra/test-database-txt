@@ -63,6 +63,7 @@ public class Database<T> {
     }
 
     public T readDocument(String collection, String documentId, Class<T> type) {
+        validateCollection(collection);
         logger.log(Level.INFO, "Reading document with id: {0}", documentId);
         Path filepath = createFilepath(collection, documentId);
         String data = jsonDataSaver.readDocumentFromCollection(filepath);
@@ -71,6 +72,13 @@ public class Database<T> {
             return objectMapper.readValue(data, type);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    private void validateCollection(String collection) {
+        Path path = Paths.get(ROOT_FOLDER, collection);
+        if (!Files.exists(path)) {
+            throw new IllegalArgumentException("The collection: " + collection + " does not exist");
         }
     }
 }
