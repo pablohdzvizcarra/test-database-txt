@@ -15,9 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonDataSaver {
     private ObjectMapper objectMapper = new ObjectMapper();
     private JsonFileSerializer jsonFileSerializer;
+    private DatabaseUtils databaseUtils;
 
     public JsonDataSaver() {
         jsonFileSerializer = new JsonFileSerializer();
+        databaseUtils = new DatabaseUtils();
     }
 
     private User deserializeJsonToObject(String jsonString) {
@@ -42,10 +44,11 @@ public class JsonDataSaver {
         }
     }
 
-    public void createDocumentInCollection(String data, Path filepath) {
+    public void createDocumentInCollection(String data, Path filepath, String documentId) {
         validateFilepath(filepath);
         validateJsonFormat(data);
-        jsonFileSerializer.save(data, filepath);
+        String documentWithId = databaseUtils.addIdValueToJson(data, documentId);
+        jsonFileSerializer.save(documentWithId, filepath);
     }
 
     public String readDocumentFromCollection(Path filepath) {
