@@ -46,7 +46,7 @@ class JsonDataSaverTest {
 
         // Act
         assertThrows(NullPointerException.class,
-                () -> jsonDataSaver.createDocumentInCollection(data, null),
+                () -> jsonDataSaver.createDocumentInCollection(data, null, null),
                 "The filepath provided is null");
     }
 
@@ -57,7 +57,7 @@ class JsonDataSaverTest {
 
         // Act
         assertThrows(NullPointerException.class,
-                () -> jsonDataSaver.createDocumentInCollection(null, filepath),
+                () -> jsonDataSaver.createDocumentInCollection(null, filepath, null),
                 "The filepath provided is not valid");
     }
 
@@ -69,7 +69,7 @@ class JsonDataSaverTest {
 
         // Act
         assertThrows(IllegalStateException.class,
-                () -> jsonDataSaver.createDocumentInCollection(data, filepath),
+                () -> jsonDataSaver.createDocumentInCollection(data, filepath, null),
                 "The record provided is not a valid JSON");
     }
 
@@ -86,7 +86,7 @@ class JsonDataSaverTest {
                 """;
 
         // Act
-        jsonDataSaver.createDocumentInCollection(data, filepath);
+        jsonDataSaver.createDocumentInCollection(data, filepath, null);
         String result = jsonDataSaver.readDocumentFromCollection(filepath);
 
         // Assert

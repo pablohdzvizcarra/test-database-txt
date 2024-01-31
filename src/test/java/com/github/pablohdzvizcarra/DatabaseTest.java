@@ -1,5 +1,6 @@
 package com.github.pablohdzvizcarra;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.Files;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class DatabaseTest {
-    private String databaseName = "example";
+    private final String databaseName = "test_database";
     private String rootDatabaseName = "database";
     private Database<User> database;
 
@@ -34,7 +35,30 @@ class DatabaseTest {
     @Test
     void shouldReturnTrueWhenRecordIsCreated() {
         User user = new User("John", "Conner", "john@gmail.com", "john123");
-        boolean recordCreated = database.createDocument(databaseName, user);
-        assertTrue(recordCreated);
+        String idDocument = database.createDocument(databaseName, user);
+        assertThat(idDocument)
+                .isNotNull()
+                .isNotEmpty();
+    }
+
+    @Test
+    void shouldReadDocumentWithValidIdAndCollection() {
+        // Arrange
+        User user = new User("James", "Gosling", "java@java.com", "java123");
+
+        // Act
+        String documentIdCreated = database.createDocument(databaseName, user);
+        User document = database.readDocument(databaseName, documentIdCreated, User.class);
+
+        // Assert
+        assertThat(document)
+                .isNotNull()
+                .satisfies(validUser -> {
+                    assertThat(validUser.getName()).isEqualTo(user.getName());
+                    assertThat(validUser.getLastName()).isEqualTo(user.getLastName());
+                    assertThat(validUser.getEmail()).isEqualTo(user.getEmail());
+                    assertThat(validUser.getNickname()).isEqualTo(user.getNickname());
+                    assertThat(validUser.getId()).isEqualTo(documentIdCreated);
+                });
     }
 }

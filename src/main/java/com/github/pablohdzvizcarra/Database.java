@@ -43,7 +43,7 @@ public class Database<T> {
         init(databaseName);
     }
 
-    public boolean createDocument(String collection, T object) {
+    public String createDocument(String collection, T object) {
         logger.log(Level.INFO, "Creating a new document in collection: {0}", collection);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -52,14 +52,25 @@ public class Database<T> {
             Path filepath = createFilepath(collection, documentId);
 
             jsonDataSaver.createDocumentInCollection(data, filepath, documentId);
-
+            return documentId;
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }
-        return true;
     }
 
     private Path createFilepath(String collection, String documentId) {
         return Paths.get(ROOT_FOLDER, collection, documentId);
+    }
+
+    public T readDocument(String collection, String documentId, Class<T> type) {
+        logger.log(Level.INFO, "Reading document with id: {0}", documentId);
+        Path filepath = createFilepath(collection, documentId);
+        String data = jsonDataSaver.readDocumentFromCollection(filepath);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(data, type);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
