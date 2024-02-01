@@ -43,6 +43,16 @@ public class Database<T> {
         init(databaseName);
     }
 
+    /**
+     * Creates a new document in the specified collection with the given object.
+     * 
+     * @param collection the name of the collection where the document will be
+     *                   created
+     * @param object     the object to be stored as a document
+     * @return the ID of the newly created document
+     * @throws IllegalStateException if there is an error processing the object into
+     *                               JSON format
+     */
     public String createDocument(String collection, T object) {
         logger.log(Level.INFO, "Creating a new document in collection: {0}", collection);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -62,6 +72,15 @@ public class Database<T> {
         return Paths.get(ROOT_FOLDER, collection, documentId);
     }
 
+    /**
+     * Reads a document from the specified collection with the given document ID.
+     *
+     * @param <T>        the type of the document to be read
+     * @param collection the name of the collection
+     * @param documentId the ID of the document to be read
+     * @param type       the class representing the type of the document
+     * @return the document object of type T
+     */
     public T readDocument(String collection, String documentId, Class<T> type) {
         validateCollection(collection);
         logger.log(Level.INFO, "Reading document with id: {0}", documentId);
@@ -80,5 +99,11 @@ public class Database<T> {
         if (!Files.exists(path)) {
             throw new IllegalArgumentException("The collection: " + collection + " does not exist");
         }
+    }
+
+    public void deleteDocument(String collection, String documentId) {
+        validateCollection(collection);
+        Path filepath = createFilepath(collection, documentId);
+        jsonDataSaver.deleteDocumentFromCollection(filepath);
     }
 }

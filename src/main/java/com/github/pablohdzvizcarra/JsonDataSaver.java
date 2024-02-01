@@ -55,4 +55,8 @@ public class JsonDataSaver {
         validateFilepath(filepath);
         return jsonFileSerializer.deserializeFileIntoJson(filepath);
     }
+
+    public void deleteDocumentFromCollection(Path filepath) {
+        jsonFileSerializer.deleteJsonFile(filepath);
+    }
 }

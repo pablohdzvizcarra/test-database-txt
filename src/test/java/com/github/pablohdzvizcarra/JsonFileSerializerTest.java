@@ -32,6 +32,7 @@ class JsonFileSerializerTest {
             }
         }
     }
+
     @BeforeEach
     void setUp() {
         jsonFileSerializer = new JsonFileSerializer();
@@ -136,5 +137,29 @@ class JsonFileSerializerTest {
                 .contains("james@java.com")
                 .contains("java_master");
 
+    }
+
+    @Test
+    void shouldDeleteJsonFile() {
+        // Arrange
+        String userJson = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_master"
+                }
+                """;
+
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = Paths.get(ROOT_FOLDER, COLLECTION_TEST, documentId);
+        jsonFileSerializer.save(userJson, filepath);
+
+        // Act
+        jsonFileSerializer.deleteJsonFile(filepath);
+
+        // Assert
+        assertThat(Files.exists(filepath))
+                .isFalse();
     }
 }

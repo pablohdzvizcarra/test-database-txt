@@ -78,4 +78,32 @@ class DatabaseTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("The collection: wrong_collection does not exist");
     }
+
+    @Test
+    void shouldDeleteAnExistingUserFromDatabase() {
+        // Arrange
+        User user = new User("James", "Gosling", "java@java.com", "java123");
+
+        // Act
+        String idDocumentCreated = database.createDocument(COLLECTION, user);
+
+        // Assert
+        assertThat(database.readDocument(COLLECTION, idDocumentCreated, User.class))
+                .isNotNull()
+                .satisfies(validUser -> {
+                    assertThat(validUser.getName()).isEqualTo(user.getName());
+                    assertThat(validUser.getLastName()).isEqualTo(user.getLastName());
+                    assertThat(validUser.getEmail()).isEqualTo(user.getEmail());
+                    assertThat(validUser.getNickname()).isEqualTo(user.getNickname());
+                    assertThat(validUser.getId()).isEqualTo(idDocumentCreated);
+                });
+
+        // Act
+        database.deleteDocument(COLLECTION, idDocumentCreated);
+        Throwable throwable = catchThrowable(() -> database.readDocument(COLLECTION, idDocumentCreated, User.class));
+
+        // Assert
+        assertThat(throwable).isInstanceOf(JsonFileSerializerException.class)
+                .hasMessageContaining(idDocumentCreated);
+    }
 }
