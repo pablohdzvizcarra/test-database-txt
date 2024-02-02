@@ -131,4 +131,25 @@ class DatabaseTest {
                     assertThat(validUser.getId()).isEqualTo(idDocumentCreated);
                 });
     }
+
+    @Test
+    void shouldCreateDocumentWithAValidJsonString() {
+        // Arrange
+        String json = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_master"
+                }
+                """;
+
+        // Act
+        String idDocumentCreated = database.createDocument(COLLECTION, json);
+
+        // Assert
+        assertThat(idDocumentCreated).isNotNull();
+
+    }
+
 }

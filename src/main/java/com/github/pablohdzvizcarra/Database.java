@@ -21,9 +21,9 @@ public class Database<T> {
     private final Logger logger = Logger.getLogger(Database.class.getName());
     private final JsonDataSaver jsonDataSaver = new JsonDataSaver();
 
-    public Database(String databaseName) {
+    public Database(String collectionName) {
         databaseUtils = new DatabaseUtils();
-        init(databaseName);
+        init(collectionName);
     }
 
     /**
@@ -72,6 +72,14 @@ public class Database<T> {
             throw new IllegalStateException(e);
         }
     }
+
+    public String createDocument(String collection, String document) {
+        logger.log(Level.INFO, "Creating a new document in collection: {0}", collection);
+        String documentId = databaseUtils.createDocumentId();
+        Path filepath = createFilepath(collection, documentId);
+        jsonDataSaver.createDocumentInCollection(document, filepath, documentId);
+        return documentId;
+    } 
 
     private Path createFilepath(String collection, String documentId) {
         return Paths.get(ROOT_FOLDER, collection, documentId);
