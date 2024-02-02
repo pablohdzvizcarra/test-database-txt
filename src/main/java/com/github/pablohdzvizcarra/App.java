@@ -43,6 +43,19 @@ public class App {
                 ctx.result("The record cannot be deleted message error: " + e.getMessage());
             }
         });
+
+        app.put("api/v1/{collection}/{id}", ctx -> {
+            String collection = ctx.pathParam("collection");
+            String id = ctx.pathParam("id");
+            String body = ctx.body();
+            try {
+                database.updateDocument(collection, id, body);
+                ctx.result("The record was updated");
+            } catch (Exception e) {
+                ctx.status(400);
+                ctx.result("The record cannot be updated message error: " + e.getMessage());
+            }
+        });
     }
 
 }
