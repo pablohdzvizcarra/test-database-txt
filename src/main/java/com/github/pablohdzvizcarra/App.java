@@ -18,5 +18,17 @@ public class App {
                 ctx.result("The record cannot be created message error: " + e.getMessage());
             }
         });
+
+        app.get("/api/v1/{collection}/{id}", ctx -> {
+            String collection = ctx.pathParam("collection");
+            String id = ctx.pathParam("id");
+            try {
+                String document = database.readDocument(collection, id);
+                ctx.result(document);
+            } catch (Exception e) {
+                ctx.status(404);
+                ctx.result("The record cannot be retrieved message error: " + e.getMessage());
+            }
+        });
     }
 }
