@@ -103,8 +103,8 @@ class DatabaseTest {
         Throwable throwable = catchThrowable(() -> database.readDocument(COLLECTION, idDocumentCreated, User.class));
 
         // Assert
-        assertThat(throwable).isInstanceOf(JsonFileSerializerException.class)
-                .hasMessageContaining(idDocumentCreated);
+        assertThat(throwable).isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("The id provided is not valid for any document in the collection");
     }
 
     @Test
@@ -152,4 +152,42 @@ class DatabaseTest {
 
     }
 
+    @Test
+    void shouldReturJSONStringWhenDocumentIsRead() {
+        // Arrange
+        String json = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_master"
+                }
+                """;
+
+        // Act
+        String idDocumentCreated = database.createDocument(COLLECTION, json);
+        String document = database.readDocument(COLLECTION, idDocumentCreated);
+
+        // Assert
+        assertThat(document)
+                .isNotNull()
+                .contains("James")
+                .contains("Gosling")
+                .contains("james@java.com")
+                .contains("java_master")
+                .contains("_id")
+                .contains(idDocumentCreated);
+    }
+
+    @Test
+    void shouldReturnExceptionWhenTryReadNonExistsDocument() {
+        // Arrange
+        // Act
+        Throwable throwable = catchThrowable(() -> database.readDocument(COLLECTION, "null"));
+
+        // Assert
+        assertThat(throwable)
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("The id provided is not valid for any document in the collection");
+    }
 }

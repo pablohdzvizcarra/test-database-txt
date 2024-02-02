@@ -1,5 +1,6 @@
 package com.github.pablohdzvizcarra;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -53,7 +54,14 @@ public class JsonDataSaver {
 
     public String readDocumentFromCollection(Path filepath) {
         validateFilepath(filepath);
+        validateDocumentExistsInCollection(filepath);
         return jsonFileSerializer.deserializeFileIntoJson(filepath);
+    }
+
+    private void validateDocumentExistsInCollection(Path filepath) {
+        if (Files.notExists(filepath)) {
+            throw new IllegalStateException("The id provided is not valid for any document in the collection");
+        }
     }
 
     public void deleteDocumentFromCollection(Path filepath) {

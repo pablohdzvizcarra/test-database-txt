@@ -107,6 +107,13 @@ public class Database<T> {
         }
     }
 
+    public String readDocument(String collection, String documentId) {
+        validateCollection(collection);
+        logger.log(Level.INFO, "Reading document with id: {0}", documentId);
+        Path filepath = createFilepath(collection, documentId);
+        return jsonDataSaver.readDocumentFromCollection(filepath);
+    }
+
     /**
      * Validates if a collection exists in the database.
      *
