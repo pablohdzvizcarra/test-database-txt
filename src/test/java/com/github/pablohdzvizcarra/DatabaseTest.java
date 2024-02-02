@@ -106,4 +106,29 @@ class DatabaseTest {
         assertThat(throwable).isInstanceOf(JsonFileSerializerException.class)
                 .hasMessageContaining(idDocumentCreated);
     }
+
+    @Test
+    void shouldUpdateNameWhenDocumentExists() {
+        // Arrange
+        User user = new User("James", "Gosling", "james@java.com", "java_master");
+
+        // Act
+        String idDocumentCreated = database.createDocument(COLLECTION, user);
+        assertThat(idDocumentCreated).isNotNull();
+
+        var userToUpdate = new User("James", "Gosling", "james.gosling@java.com", "java_master");
+        database.updateDocument(COLLECTION, idDocumentCreated, userToUpdate);
+        User userUpdated = database.readDocument(COLLECTION, idDocumentCreated, User.class);
+
+        // Assert
+        assertThat(userUpdated)
+                .isNotNull()
+                .satisfies(validUser -> {
+                    assertThat(validUser.getName()).isEqualTo(userToUpdate.getName());
+                    assertThat(validUser.getLastName()).isEqualTo(userToUpdate.getLastName());
+                    assertThat(validUser.getEmail()).isEqualTo(userToUpdate.getEmail());
+                    assertThat(validUser.getNickname()).isEqualTo(userToUpdate.getNickname());
+                    assertThat(validUser.getId()).isEqualTo(idDocumentCreated);
+                });
+    }
 }

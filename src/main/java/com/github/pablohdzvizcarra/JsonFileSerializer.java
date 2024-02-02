@@ -57,4 +57,9 @@ public class JsonFileSerializer {
                     "An error ocurred trying to delete the document: " + filepath.getFileName(), e);
         }
     }
+
+    public void updateJsonFile(String document, Path filepath) {
+        deleteJsonFile(filepath);
+        save(document, filepath);
+    }
 }

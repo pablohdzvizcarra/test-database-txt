@@ -59,4 +59,11 @@ public class JsonDataSaver {
     public void deleteDocumentFromCollection(Path filepath) {
         jsonFileSerializer.deleteJsonFile(filepath);
     }
+
+    public void updateDocumentInCollection(String data, Path filepath, String documentId) {
+        validateFilepath(filepath);
+        validateJsonFormat(data);
+        String documentWithId = databaseUtils.addIdValueToJson(data, documentId);
+        jsonFileSerializer.updateJsonFile(documentWithId, filepath);
+    }
 }

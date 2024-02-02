@@ -10,6 +10,11 @@ import java.util.logging.Logger;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Represents a generic database that provides CRUD operations for storing and retrieving data.
+ *
+ * @param <T> the type of the data to be stored in the database
+ */
 public class Database<T> {
     private DatabaseUtils databaseUtils;
     private static final String ROOT_FOLDER = "database";
@@ -94,6 +99,12 @@ public class Database<T> {
         }
     }
 
+    /**
+     * Validates if a collection exists in the database.
+     *
+     * @param collection the name of the collection to validate
+     * @throws IllegalArgumentException if the collection does not exist
+     */
     private void validateCollection(String collection) {
         Path path = Paths.get(ROOT_FOLDER, collection);
         if (!Files.exists(path)) {
@@ -101,9 +112,38 @@ public class Database<T> {
         }
     }
 
+    /**
+     * Deletes a document from the specified collection.
+     *
+     * @param collection  the name of the collection
+     * @param documentId  the ID of the document to be deleted
+     */
     public void deleteDocument(String collection, String documentId) {
         validateCollection(collection);
         Path filepath = createFilepath(collection, documentId);
         jsonDataSaver.deleteDocumentFromCollection(filepath);
+    }
+
+    /**
+     * Updates a document in the specified collection with the given object.
+     * The document Id returned is the same as the one provided.
+     *
+     * @param collection the name of the collection where the document is located
+     * @param documentId the ID of the document to be updated
+     * @param object     the object containing the updated data
+     * @return the ID of the updated document needs to be the same as the one
+     *         provided
+     */
+    public String updateDocument(String collection, String documentId, T object) {
+        validateCollection(collection);
+        Path filepath = createFilepath(collection, documentId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String data = objectMapper.writeValueAsString(object);
+            jsonDataSaver.updateDocumentInCollection(data, filepath, documentId);
+            return documentId;
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }
