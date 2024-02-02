@@ -190,4 +190,41 @@ class DatabaseTest {
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("The id provided is not valid for any document in the collection");
     }
+
+    @Test
+    void shouldUpdateDocumentWithAValidJsonString() {
+        // Arrange
+        String json = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_master"
+                }
+                """;
+
+        // Act
+        String idDocumentCreated = database.createDocument(COLLECTION, json);
+        String jsonToUpdate = """
+                {
+                    "name": "James",
+                    "lastName": "Gosling",
+                    "email": "james@java.com",
+                    "nickname": "java_god"
+                }
+                """;
+
+        database.updateDocument(COLLECTION, idDocumentCreated, jsonToUpdate);
+        String document = database.readDocument(COLLECTION, idDocumentCreated);
+
+        // Assert
+        assertThat(document)
+                .isNotNull()
+                .contains("James")
+                .contains("Gosling")
+                .contains("james@java.com")
+                .contains("java_god")
+                .contains("_id")
+                .contains(idDocumentCreated);
+    }
 }

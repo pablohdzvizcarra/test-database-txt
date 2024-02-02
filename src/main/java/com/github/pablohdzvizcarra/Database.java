@@ -161,4 +161,11 @@ public class Database<T> {
             throw new IllegalStateException(e);
         }
     }
+
+    public String updateDocument(String collection, String documentId, String document) {
+        validateCollection(collection);
+        Path filepath = createFilepath(collection, documentId);
+        jsonDataSaver.updateDocumentInCollection(document, filepath, documentId);
+        return documentId;
+    }
 }
