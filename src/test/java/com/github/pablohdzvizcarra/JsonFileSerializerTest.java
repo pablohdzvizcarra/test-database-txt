@@ -61,6 +61,8 @@ class JsonFileSerializerTest {
                 .contains("Gosling")
                 .contains("james@java.com")
                 .contains("java_master");
+
+        jsonFileSerializer.deleteJsonFile(filepath);
     }
 
     @Test
@@ -108,6 +110,9 @@ class JsonFileSerializerTest {
                 .contains("Eich")
                 .contains("brendan@javascript.com")
                 .contains("javascript_master");
+        
+        jsonFileSerializer.deleteJsonFile(filepathOne);
+        jsonFileSerializer.deleteJsonFile(filepathTwo);
     }
 
     @Test
@@ -136,7 +141,8 @@ class JsonFileSerializerTest {
                 .contains("Gosling")
                 .contains("james@java.com")
                 .contains("java_master");
-
+        
+        jsonFileSerializer.deleteJsonFile(filepath);
     }
 
     @Test

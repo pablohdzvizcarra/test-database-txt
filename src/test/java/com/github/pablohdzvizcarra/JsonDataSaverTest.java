@@ -94,5 +94,7 @@ class JsonDataSaverTest {
                 .isNotNull()
                 .contains("James")
                 .contains("Gosling");
+
+        jsonDataSaver.deleteDocumentFromCollection(filepath);
     }
 }

@@ -14,7 +14,6 @@ class DatabaseTest {
     private final String COLLECTION = "test_database";
     private String ROOT_DATABASE = "database";
     private Database<User> database;
-
     @BeforeEach
     void setUp() {
         database = new Database<>(COLLECTION);
@@ -40,6 +39,9 @@ class DatabaseTest {
         assertThat(idDocument)
                 .isNotNull()
                 .isNotEmpty();
+
+        // Clean
+        database.deleteDocument(COLLECTION, idDocument);
     }
 
     @Test
@@ -61,6 +63,9 @@ class DatabaseTest {
                     assertThat(validUser.getNickname()).isEqualTo(user.getNickname());
                     assertThat(validUser.getId()).isEqualTo(documentIdCreated);
                 });
+
+        // Clean
+        database.deleteDocument(COLLECTION, documentIdCreated);
     }
 
     @Test
@@ -130,6 +135,9 @@ class DatabaseTest {
                     assertThat(validUser.getNickname()).isEqualTo(userToUpdate.getNickname());
                     assertThat(validUser.getId()).isEqualTo(idDocumentCreated);
                 });
+
+        // Clean
+        database.deleteDocument(COLLECTION, idDocumentCreated);
     }
 
     @Test
@@ -149,7 +157,9 @@ class DatabaseTest {
 
         // Assert
         assertThat(idDocumentCreated).isNotNull();
-
+        
+        // Clean
+        database.deleteDocument(COLLECTION, idDocumentCreated);
     }
 
     @Test
@@ -177,6 +187,9 @@ class DatabaseTest {
                 .contains("java_master")
                 .contains("_id")
                 .contains(idDocumentCreated);
+
+        // Clean
+        database.deleteDocument(COLLECTION, idDocumentCreated);
     }
 
     @Test
@@ -226,5 +239,8 @@ class DatabaseTest {
                 .contains("java_god")
                 .contains("_id")
                 .contains(idDocumentCreated);
+
+        // Clean
+        database.deleteDocument(COLLECTION, idDocumentCreated);
     }
 }
