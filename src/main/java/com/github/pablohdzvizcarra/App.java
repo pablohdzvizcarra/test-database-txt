@@ -10,6 +10,11 @@ public class App {
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(9182);
         app.get("/", ctx -> ctx.result("Welcome to JSON database!"));
+        app.post("/api/v1/create/collection/{name}", ctx -> {
+            String collection = ctx.pathParam("name");
+            database.createCollection(collection);
+            ctx.result("The collection " + collection + " was created");
+        });
         app.post("/api/v1/{collection}", ctx -> {
             String collection = ctx.pathParam("collection");
             String body = ctx.body();

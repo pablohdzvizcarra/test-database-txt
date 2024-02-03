@@ -26,6 +26,10 @@ public class Database<T> {
         init(collectionName);
     }
 
+    public void createCollection(String collectionName) {
+        init(collectionName);
+    }
+
     /**
      * Initializes a new collection with the collection parameter as name.
      *
