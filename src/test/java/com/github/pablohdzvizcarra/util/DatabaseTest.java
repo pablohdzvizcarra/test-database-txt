@@ -1,4 +1,4 @@
-package com.github.pablohdzvizcarra;
+package com.github.pablohdzvizcarra.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;

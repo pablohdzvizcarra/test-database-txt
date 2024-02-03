@@ -1,4 +1,4 @@
-package com.github.pablohdzvizcarra;
+package com.github.pablohdzvizcarra.util;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 

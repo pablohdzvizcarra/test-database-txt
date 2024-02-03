@@ -1,4 +1,4 @@
-package com.github.pablohdzvizcarra;
+package com.github.pablohdzvizcarra.util;
 
 import java.util.Map;
 import java.util.UUID;

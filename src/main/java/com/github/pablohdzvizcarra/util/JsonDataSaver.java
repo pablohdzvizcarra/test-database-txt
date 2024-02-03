@@ -1,4 +1,4 @@
-package com.github.pablohdzvizcarra;
+package com.github.pablohdzvizcarra.util;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

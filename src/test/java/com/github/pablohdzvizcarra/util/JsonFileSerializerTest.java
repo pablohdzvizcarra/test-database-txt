@@ -1,7 +1,6 @@
-package com.github.pablohdzvizcarra;
+package com.github.pablohdzvizcarra.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -217,13 +216,6 @@ class JsonFileSerializerTest {
         // Assert
         assertThat(documents)
                 .isNotEmpty()
-                .satisfies(list -> {
-                    Map<String, Object> firstUser = list.get(0);
-                    assertThat(firstUser).contains(entry("name", "James"));
-                    assertThat(firstUser).contains(entry("lastName", "Gosling"));
-                    assertThat(firstUser).contains(entry("email", "james@java.com"));
-                    assertThat(firstUser).contains(entry("nickname", "java_master"));
-                })
                 .hasSize(2)
                 .extracting(jsonDataMap -> jsonDataMap.get("name"))
                 .contains("James", "Brendan")

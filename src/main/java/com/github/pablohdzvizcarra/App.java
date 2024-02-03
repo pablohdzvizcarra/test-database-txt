@@ -1,5 +1,8 @@
 package com.github.pablohdzvizcarra;
 
+import com.github.pablohdzvizcarra.util.Database;
+import com.github.pablohdzvizcarra.util.User;
+
 import io.javalin.Javalin;
 
 public class App {
