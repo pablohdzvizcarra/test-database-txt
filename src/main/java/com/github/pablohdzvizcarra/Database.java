@@ -108,8 +108,8 @@ public class Database<T> {
     }
 
     public String readDocument(String collection, String documentId) {
-        validateCollection(collection);
         logger.log(Level.INFO, "Reading document with id: {0}", documentId);
+        validateCollection(collection);
         Path filepath = createFilepath(collection, documentId);
         return jsonDataSaver.readDocumentFromCollection(filepath);
     }
@@ -134,6 +134,7 @@ public class Database<T> {
      * @param documentId  the ID of the document to be deleted
      */
     public void deleteDocument(String collection, String documentId) {
+        logger.log(Level.INFO, "Deleting document with id: {0}", documentId);
         validateCollection(collection);
         Path filepath = createFilepath(collection, documentId);
         jsonDataSaver.deleteDocumentFromCollection(filepath);
@@ -163,6 +164,7 @@ public class Database<T> {
     }
 
     public String updateDocument(String collection, String documentId, String document) {
+        logger.log(Level.INFO, "Updating document with id: {0}", documentId);
         validateCollection(collection);
         Path filepath = createFilepath(collection, documentId);
         jsonDataSaver.updateDocumentInCollection(document, filepath, documentId);
@@ -170,6 +172,7 @@ public class Database<T> {
     }
 
     public String readAllDocumentsFromCollection(String collection) {
+        logger.log(Level.INFO, "Reading all documents from collection: {0}", collection);
         validateCollection(collection);
         Path collectionPath = Paths.get(ROOT_FOLDER, collection);
         return jsonDataSaver.readAllDocumentsFromCollection(collectionPath);
