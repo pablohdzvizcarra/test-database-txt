@@ -7,7 +7,7 @@
 
   <groupId>com.github.pablohdzvizcarra</groupId>
   <artifactId>test-database-txt</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 
   <name>test-database-txt</name>
   <url>http://www.example.com</url>
@@ -64,19 +64,19 @@
             <goals>
               <goal>shade</goal>
             </goals>
+            <configuration>
+              <outputFile>target/${project.artifactId}-${project.version}.jar</outputFile>
+              <transformers>
+                <transformer
+                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <manifestEntries>
+                    <Main-Class>com.github.pablohdzvizcarra.App</Main-Class>
+                  </manifestEntries>
+                </transformer>
+              </transformers>
+            </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.github.pablohdzvizcarra.App</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
       </plugin>
     </plugins>
   </build>
