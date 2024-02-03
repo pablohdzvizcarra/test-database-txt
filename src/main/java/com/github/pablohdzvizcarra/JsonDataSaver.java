@@ -74,4 +74,8 @@ public class JsonDataSaver {
         String documentWithId = databaseUtils.addIdValueToJson(data, documentId);
         jsonFileSerializer.updateJsonFile(documentWithId, filepath);
     }
+
+    public String readAllDocumentsFromCollection(Path collectionPath) {
+        return jsonFileSerializer.deserializeFilesInFolderIntoJson(collectionPath);
+    }
 }

@@ -56,6 +56,18 @@ public class App {
                 ctx.result("The record cannot be updated message error: " + e.getMessage());
             }
         });
+
+        app.get("api/v1/{collection}", ctx -> {
+            String collection = ctx.pathParam("collection");
+            try {
+                String documents = database.readAllDocumentsFromCollection(collection);
+                ctx.contentType("application/json");
+                ctx.result(documents);
+            } catch (Exception e) {
+                ctx.status(404);
+                ctx.result("The records cannot be retrieved message error: " + e.getMessage());
+            }
+        });
     }
 
 }

@@ -168,4 +168,10 @@ public class Database<T> {
         jsonDataSaver.updateDocumentInCollection(document, filepath, documentId);
         return documentId;
     }
+
+    public String readAllDocumentsFromCollection(String collection) {
+        validateCollection(collection);
+        Path collectionPath = Paths.get(ROOT_FOLDER, collection);
+        return jsonDataSaver.readAllDocumentsFromCollection(collectionPath);
+    }
 }

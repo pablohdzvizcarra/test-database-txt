@@ -3,8 +3,14 @@ package com.github.pablohdzvizcarra;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -61,5 +67,41 @@ public class JsonFileSerializer {
     public void updateJsonFile(String document, Path filepath) {
         deleteJsonFile(filepath);
         save(document, filepath);
+    }
+
+    /**
+     * Deserializes the files in a folder into a JSON string.
+     *
+     * @param collectionPath the path of the folder containing the files
+     * @return the JSON string representing the deserialized data
+     * @throws JsonFileSerializerException if an error occurs during deserialization
+     */
+    public String deserializeFilesInFolderIntoJson(Path collectionPath) {
+        objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+        try (Stream<Path> files = Files.walk(collectionPath)) {
+                List<HashMap<String, Object>> listData = files
+                    .filter(Files::isRegularFile)
+                    .map(filepath -> {
+                        try {
+                            return objectMapper.readValue(filepath.toFile(), String.class);
+                        } catch (IOException e) {
+                            throw new IllegalStateException("Error trying to deserialize the jsonString into Java Object " + e.getMessage(), e);
+                        }
+                    })
+                    .map(json -> {
+                        try {
+                            return objectMapper.readValue(json, new TypeReference<HashMap<String, Object>>() {
+                            });
+                        } catch (IOException e) {
+                            throw new IllegalStateException("Error trying to deserialize the jsonString into Java Object " + e.getMessage(), e);
+                        }
+                    })
+                    .filter(Objects::nonNull)
+                    .toList();
+            return objectMapper.writeValueAsString(listData);
+        } catch (IOException e) {
+            throw new JsonFileSerializerException(
+                    "An error ocurred trying to deserialize the documents in the folder: " + collectionPath.getFileName(), e);
+        }
     }
 }
