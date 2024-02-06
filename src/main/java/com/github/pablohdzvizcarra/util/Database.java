@@ -11,7 +11,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Represents a generic database that provides CRUD operations for storing and retrieving data.
+ * Represents a generic database that provides CRUD operations for storing and
+ * retrieving data.
  *
  * @param <T> the type of the data to be stored in the database
  */
@@ -23,7 +24,18 @@ public class Database<T> {
 
     public Database(String collectionName) {
         databaseUtils = new DatabaseUtils();
+        initRootDatabase();
         init(collectionName);
+    }
+
+    private void initRootDatabase() {
+        if (Files.notExists(Paths.get(ROOT_FOLDER))) {
+            try {
+                Files.createDirectory(Paths.get(ROOT_FOLDER));
+            } catch (IOException e) {
+                throw new IllegalStateException("Error trying to create the root database", e);
+            }
+        }
     }
 
     public void createCollection(String collectionName) {
@@ -83,7 +95,7 @@ public class Database<T> {
         Path filepath = createFilepath(collection, documentId);
         jsonDataSaver.createDocumentInCollection(document, filepath, documentId);
         return documentId;
-    } 
+    }
 
     private Path createFilepath(String collection, String documentId) {
         return Paths.get(ROOT_FOLDER, collection, documentId);
@@ -134,8 +146,8 @@ public class Database<T> {
     /**
      * Deletes a document from the specified collection.
      *
-     * @param collection  the name of the collection
-     * @param documentId  the ID of the document to be deleted
+     * @param collection the name of the collection
+     * @param documentId the ID of the document to be deleted
      */
     public void deleteDocument(String collection, String documentId) {
         logger.log(Level.INFO, "Deleting document with id: {0}", documentId);

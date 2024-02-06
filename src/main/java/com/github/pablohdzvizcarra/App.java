@@ -1,5 +1,8 @@
 package com.github.pablohdzvizcarra;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.github.pablohdzvizcarra.util.Database;
 import com.github.pablohdzvizcarra.util.User;
 
@@ -7,6 +10,7 @@ import io.javalin.Javalin;
 
 public class App {
     private static final Database<User> database = new Database<>("users");
+    private static final Logger logger = Logger.getLogger("App");
     public static void main(String[] args) {
         Javalin app = Javalin.create().start(9182);
         app.get("/", ctx -> ctx.result("Welcome to JSON database!"));
@@ -35,6 +39,7 @@ public class App {
                 ctx.contentType("application/json");
                 ctx.result(document);
             } catch (Exception e) {
+                logger.log(Level.SEVERE, "An error ocurred trying to deserialize the document: {0}", e.getMessage());
                 ctx.status(404);
                 ctx.result("The record cannot be retrieved message error: " + e.getMessage());
             }
